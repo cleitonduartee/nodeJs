@@ -1,17 +1,31 @@
 const http = require('http'); // Importando pacote nativo HTTP
+const path = require('path');
+const fs = require('fs');
+
 
 const hostname = '127.0.0.1';
 const port = 3000;
 
 const server = http.createServer((req, res) => {
+ 
  if(req.url =="/"){
-     res.end(JSON.stringify({titulo:'Pagina Inicial'}))
- }else if(req.url == "/palmeiras"){
-     res.end(JSON.stringify({titulo:'Palmeiras'}))
+    
+    const home= path.join(__dirname,'public','home.html'); //Caminho onde está o arquivo
+
+    fs.readFile(home, 'utf8',(err,data)=>{ //faz a leitura do arquivo no formato utf8
+        if(err) throw err;
+       //console.log(data);
+       res.end(data);
+    } )
+
  }else{
-     res.end("Error")
-     res.statusCode=400;
- }
+     const file = path.join(__dirname,'public', req.url);
+
+     fs.readFile(file, 'utf8',(err,data)=>{
+         if(err) throw err;
+         res.end(data)
+     })
+     }
 
 });
 
